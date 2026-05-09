@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+// Handles login and registration logic.
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -26,6 +27,7 @@ public class AuthServiceImpl implements AuthService {
     private final JWTUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
 
+    // Register a new customer and return a JWT token.
     @Override
     public AuthDTO register(AuthDTO authDTO) {
         // Check if email already exists
@@ -35,7 +37,11 @@ public class AuthServiceImpl implements AuthService {
 
         // Build and save new user
         User user = new User();
-        user.setName(authDTO.getEmail());
+        String name = authDTO.getEmail();
+        if (name != null && name.contains("@")) {
+            name = name.substring(0, name.indexOf('@'));
+        }
+        user.setName(name);
         user.setEmail(authDTO.getEmail());
         user.setPassword(passwordEncoder.encode(authDTO.getPassword()));
         user.setRole(Role.CUSTOMER); // default role on register
@@ -53,6 +59,7 @@ public class AuthServiceImpl implements AuthService {
         return response;
     }
 
+    // Authenticate a user and return a JWT token.
     @Override
     public AuthDTO login(AuthDTO authDTO) {
         // Authenticate - throws BadCredentialsException if wrong
