@@ -6,14 +6,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+// DTO for transferring user details between the API and the service layer.
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class UserDTO implements Serializable {
 
     private Long id;
-    private String username;
+    private String name;
     private String email;
-    private String password;
     private Role role;
 }
