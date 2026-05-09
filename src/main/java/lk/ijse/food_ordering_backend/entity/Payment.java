@@ -5,8 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.io.Serializable;
+ 
 import java.time.LocalDateTime;
 
+// Entity class representing a payment in the food ordering system.
 @Entity
 @Table(name = "payment")
 @Data
@@ -28,7 +30,8 @@ public class Payment implements Serializable {
     private PaymentStatus status;
 
     @Column(nullable = false)
-    private String paymentMethod;
+    private Double amount;
 
-    private LocalDateTime paidAt;
+    @Column(nullable = false)
+    private LocalDateTime paymentDate;
 }
