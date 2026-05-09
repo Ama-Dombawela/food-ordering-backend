@@ -5,10 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.io.Serializable;
-import java.math.BigDecimal;
+ 
 import java.time.LocalDateTime;
 import java.util.List;
 
+// Entity class representing an order in the food ordering system.
 @Entity
 @Table(name = "`order`")
 @Data
@@ -30,17 +31,17 @@ public class Order implements Serializable {
     private OrderStatus status;
 
     @Column(nullable = false)
-    private BigDecimal totalAmount;
+    private Double totalAmount;
 
     @Column(nullable = false)
-    private LocalDateTime createdAt;
+    private LocalDateTime orderDate;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<OrderItem> orderItems;
 
     @PrePersist
     public void prePersist() {
-        this.createdAt = LocalDateTime.now();
+        this.orderDate = LocalDateTime.now();
         this.status = OrderStatus.PLACED;
     }
 }
