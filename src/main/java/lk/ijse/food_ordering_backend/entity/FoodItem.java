@@ -5,8 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.io.Serializable;
-import java.math.BigDecimal;
+ 
 
+// Entity class representing a food item in the food ordering system.
 @Entity
 @Table(name = "food_item")
 @Data
@@ -25,7 +26,7 @@ public class FoodItem implements Serializable {
     private String description;
 
     @Column(nullable = false)
-    private BigDecimal price;
+    private Double price;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
