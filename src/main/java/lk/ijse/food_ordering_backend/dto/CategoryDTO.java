@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+// DTO for transferring category details between the API and the service layer.
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
