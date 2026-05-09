@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import lk.ijse.food_ordering_backend.entity.User;
 
+// Handles database access for users.
 @Repository
 public interface UserDao extends JpaRepository<User, Long> {
     

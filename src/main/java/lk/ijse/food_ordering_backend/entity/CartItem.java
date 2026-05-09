@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
+// Entity class representing a cart item in the food ordering system.
 @Entity
 @Table(name = "cart_item")
 @Data

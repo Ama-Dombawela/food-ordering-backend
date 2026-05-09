@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
+// DTO for transferring authentication data between the API and the service layer.
 @AllArgsConstructor
 @NoArgsConstructor
 @Data

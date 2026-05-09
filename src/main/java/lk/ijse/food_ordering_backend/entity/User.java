@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
+
+// Entity class representing a user in the food ordering system.
 @Entity
 @Table(name = "user")
 @Data

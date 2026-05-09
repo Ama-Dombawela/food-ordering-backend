@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import lk.ijse.food_ordering_backend.entity.Category;
 
+// Handles database access for categories.
 @Repository
 public interface CategoryDao extends JpaRepository<Category, Long> {
 

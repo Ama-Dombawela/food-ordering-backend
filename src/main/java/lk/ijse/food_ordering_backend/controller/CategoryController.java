@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+// Handles category API requests.
 @RestController
 @RequestMapping("/api/categories")
 @RequiredArgsConstructor
