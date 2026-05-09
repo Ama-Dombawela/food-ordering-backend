@@ -7,4 +7,6 @@ import lk.ijse.food_ordering_backend.entity.Category;
 @Repository
 public interface CategoryDao extends JpaRepository<Category, Long> {
 
+	boolean existsByName(String name);
+
 }
