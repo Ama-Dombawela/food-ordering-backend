@@ -1,13 +1,13 @@
 package lk.ijse.food_ordering_backend.security;
 
-import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import java.util.Date;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.SignatureAlgorithm;
 
+// Creates and validates JWT tokens.
 @Component
 public class JWTUtil {
 
@@ -19,12 +19,14 @@ public class JWTUtil {
 
     // Generate token for user
     public String generateToken(String email, String role) {
+        Date now = new Date();
+        Date exp = new Date(now.getTime() + expiration);
         return Jwts.builder()
-                .subject(email)
+                .setSubject(email)
                 .claim("role", role)
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(getSignKey())
+                .setIssuedAt(now)
+                .setExpiration(exp)
+                .signWith(SignatureAlgorithm.HS256, secret.getBytes())
                 .compact();
     }
 
@@ -40,25 +42,25 @@ public class JWTUtil {
 
     // Check if token is valid
     public boolean isTokenValid(String token, String email) {
-        return extractEmail(token).equals(email) && !isTokenExpired(token);
+        try {
+            Claims claims = extractClaims(token);
+            return claims.getSubject().equals(email) && !isTokenExpired(claims);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     // Check if token is expired
-    private boolean isTokenExpired(String token) {
-        return extractClaims(token).getExpiration().before(new Date());
+    private boolean isTokenExpired(Claims claims) {
+        return claims.getExpiration().before(new Date());
     }
 
     // Extract all claims from token
     private Claims extractClaims(String token) {
         return Jwts.parser()
-                .verifyWith(getSignKey())
+                .setSigningKey(secret.getBytes())
                 .build()
-                .parseSignedClaims(token)
-                .getPayload();
-    }
-
-    // Get signing key
-    private SecretKey getSignKey() {
-        return Keys.hmacShaKeyFor(secret.getBytes());
+                .parseClaimsJws(token)
+                .getBody();
     }
 }

@@ -20,6 +20,7 @@ import lk.ijse.food_ordering_backend.security.CustomUserDetailsService;
 import lk.ijse.food_ordering_backend.security.JWTFilter;
 import lombok.RequiredArgsConstructor;
 
+// Configures Spring Security and JWT protection.
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
