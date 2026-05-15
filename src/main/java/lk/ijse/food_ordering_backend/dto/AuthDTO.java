@@ -11,6 +11,7 @@ import java.io.Serializable;
 @Data
 public class AuthDTO implements Serializable {
     private String email;
+    private Long userId;
     private String password;
     private String token;
     private String role;

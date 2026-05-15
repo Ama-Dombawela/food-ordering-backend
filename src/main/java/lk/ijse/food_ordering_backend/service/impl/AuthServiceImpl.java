@@ -49,13 +49,14 @@ public class AuthServiceImpl implements AuthService {
         userDao.save(user);
 
         // Generate token
-        String token = jwtUtil.generateToken(user.getEmail(), user.getRole().name());
+        String token = jwtUtil.generateToken(user.getEmail(), user.getRole().name(), user.getId());
 
         // Build and return response
         AuthDTO response = new AuthDTO();
         response.setEmail(user.getEmail());
         response.setToken(token);
         response.setRole(user.getRole().name());
+        response.setUserId(user.getId());
         return response;
     }
 
@@ -73,13 +74,14 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(() -> new DataNotFoundException("User not found"));
 
         // Generate token
-        String token = jwtUtil.generateToken(user.getEmail(), user.getRole().name());
+        String token = jwtUtil.generateToken(user.getEmail(), user.getRole().name(), user.getId());
 
         // Build and return response
         AuthDTO response = new AuthDTO();
         response.setEmail(user.getEmail());
         response.setToken(token);
         response.setRole(user.getRole().name());
+        response.setUserId(user.getId());
         return response;
     }
 }

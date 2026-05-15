@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 // Starts the Spring Boot application.
 @SpringBootApplication
 public class FoodOrderingBackendApplication {
-
+ 
 	public static void main(String[] args) {
 		SpringApplication.run(FoodOrderingBackendApplication.class, args);
 	}

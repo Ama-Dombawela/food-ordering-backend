@@ -2,6 +2,7 @@ package lk.ijse.food_ordering_backend.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -19,6 +20,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import lk.ijse.food_ordering_backend.security.CustomUserDetailsService;
 import lk.ijse.food_ordering_backend.security.JWTFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.cors.CorsConfigurationSource;
+
+import java.util.List;
 
 // Configures Spring Security and JWT protection.
 @Configuration
@@ -34,21 +40,41 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                // Apply CORS policy defined in corsConfigurationSource()
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 // Disable CSRF - not needed for REST APIs
                 .csrf(AbstractHttpConfigurer::disable)
 
                 // Define route permissions
                 .authorizeHttpRequests(auth -> auth
+
+                        // Allow browser preflight OPTIONS requests without authentication
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        
                         // Public routes - no token needed
                         .requestMatchers("/api/auth/**").permitAll()
 
-                        // Admin only routes
-                        .requestMatchers("/api/foods/**").hasRole("ADMIN")
-                        .requestMatchers("/api/categories/**").hasRole("ADMIN")
+                        // allow customers to read, only ADMIN can write
+                        .requestMatchers(HttpMethod.GET, "/api/foods/**").hasAnyRole("ADMIN", "CUSTOMER")
+                        .requestMatchers(HttpMethod.GET, "/api/categories/**").hasAnyRole("ADMIN", "CUSTOMER")
+                        .requestMatchers(HttpMethod.POST, "/api/foods/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/foods/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/foods/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/categories/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/categories/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/categories/**").hasRole("ADMIN")
+
+                        // ADMIN and CUSTOMER can view and update their profiles
+                        .requestMatchers(HttpMethod.GET, "/api/users/**").hasAnyRole("ADMIN", "CUSTOMER")
+                        .requestMatchers(HttpMethod.PUT, "/api/users/**").hasAnyRole("ADMIN", "CUSTOMER") 
+
+                        // All other user operations (e.g. DELETE, POST) are ADMIN only
                         .requestMatchers("/api/users/**").hasRole("ADMIN")
 
-                        // Customer routes
+                        // Only customers can manage their cart
                         .requestMatchers("/api/cart/**").hasRole("CUSTOMER")
+
+                        // Both CUSTOMER and ADMIN can manage and view orders and payments
                         .requestMatchers("/api/orders/**").hasAnyRole("CUSTOMER", "ADMIN")
                         .requestMatchers("/api/payments/**").hasAnyRole("CUSTOMER", "ADMIN")
 
@@ -66,6 +92,25 @@ public class SecurityConfig {
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    // Configures CORS to allow requests from the frontend dev server
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        // Only allow requests from the Vite frontend origin
+        config.setAllowedOrigins(List.of("http://localhost:5173"));
+         // Allow standard HTTP methods used by the REST API
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        // Allow all headers (e.g. Authorization, Content-Type)
+        config.setAllowedHeaders(List.of("*"));
+        // Allow cookies and Authorization headers to be sent cross-origin
+        config.setAllowCredentials(true);
+
+        // Apply this CORS config to all endpoints
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 
     // Password encoder - BCrypt hashing

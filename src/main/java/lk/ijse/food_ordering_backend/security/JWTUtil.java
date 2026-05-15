@@ -18,12 +18,13 @@ public class JWTUtil {
     private Long expiration;
 
     // Generate token for user
-    public String generateToken(String email, String role) {
+    public String generateToken(String email, String role, Long userId) {
         Date now = new Date();
         Date exp = new Date(now.getTime() + expiration);
         return Jwts.builder()
                 .setSubject(email)
                 .claim("role", role)
+                .claim("userId", userId)
                 .setIssuedAt(now)
                 .setExpiration(exp)
                 .signWith(SignatureAlgorithm.HS256, secret.getBytes())
