@@ -17,6 +17,96 @@ A RESTful API backend built with Spring Boot for a full-featured food ordering p
 
 ---
 
+## Project Structure
+
+```text
+food-ordering-backend/
+├── pom.xml
+├── src/
+│   ├── main/
+│   │   ├── java/lk/ijse/food_ordering_backend/
+│   │   │   ├── FoodOrderingBackendApplication.java
+│   │   │   ├── config/
+│   │   │   │   └── SecurityConfig.java
+│   │   │   ├── controller/
+│   │   │   │   ├── AuthController.java
+│   │   │   │   ├── CartController.java
+│   │   │   │   ├── CategoryController.java
+│   │   │   │   ├── FoodController.java
+│   │   │   │   ├── OrderController.java
+│   │   │   │   ├── PaymentController.java
+│   │   │   │   └── UserController.java
+│   │   │   ├── dao/
+│   │   │   │   ├── CartDao.java
+│   │   │   │   ├── CartItemDao.java
+│   │   │   │   ├── CategoryDao.java
+│   │   │   │   ├── FoodItemDao.java
+│   │   │   │   ├── OrderDao.java
+│   │   │   │   ├── OrderItemDao.java
+│   │   │   │   ├── PaymentDao.java
+│   │   │   │   └── UserDao.java
+│   │   │   ├── dto/
+│   │   │   │   ├── AuthDTO.java
+│   │   │   │   ├── CartDTO.java
+│   │   │   │   ├── CartItemDTO.java
+│   │   │   │   ├── CategoryDTO.java
+│   │   │   │   ├── FoodItemDTO.java
+│   │   │   │   ├── OrderDTO.java
+│   │   │   │   ├── OrderItemDTO.java
+│   │   │   │   ├── PaymentDTO.java
+│   │   │   │   └── UserDTO.java
+│   │   │   ├── entity/
+│   │   │   │   ├── Cart.java
+│   │   │   │   ├── CartItem.java
+│   │   │   │   ├── Category.java
+│   │   │   │   ├── FoodItem.java
+│   │   │   │   ├── FoodItemStatus.java
+│   │   │   │   ├── Order.java
+│   │   │   │   ├── OrderItem.java
+│   │   │   │   ├── OrderStatus.java
+│   │   │   │   ├── Payment.java
+│   │   │   │   ├── PaymentStatus.java
+│   │   │   │   ├── Role.java
+│   │   │   │   └── User.java
+│   │   │   ├── exception/
+│   │   │   │   ├── DataNotFoundException.java
+│   │   │   │   ├── DuplicateEntryException.java
+│   │   │   │   └── GlobalExceptionHandler.java
+│   │   │   ├── security/
+│   │   │   │   ├── CustomUserDetailsService.java
+│   │   │   │   ├── JWTFilter.java
+│   │   │   │   └── JWTUtil.java
+│   │   │   ├── service/
+│   │   │   │   ├── AuthService.java
+│   │   │   │   ├── CartService.java
+│   │   │   │   ├── CategoryService.java
+│   │   │   │   ├── FoodItemService.java
+│   │   │   │   ├── OrderService.java
+│   │   │   │   ├── PaymentService.java
+│   │   │   │   ├── UserService.java
+│   │   │   │   └── impl/
+│   │   │   │       ├── AuthServiceImpl.java
+│   │   │   │       ├── CartServiceImpl.java
+│   │   │   │       ├── CategoryServiceImpl.java
+│   │   │   │       ├── FoodItemServiceImpl.java
+│   │   │   │       ├── OrderServiceImpl.java
+│   │   │   │       ├── PaymentServiceImpl.java
+│   │   │   │       └── UserServiceImpl.java
+│   │   │   └── util/
+│   │   │       ├── AppConstants.java
+│   │   │       ├── CustomStatus.java
+│   │   │       └── .gitkeep
+│   │   └── resources/
+│   │       ├── application.properties
+│   │       ├── application.properties.example
+│   │       ├── static/
+│   │       └── templates/
+│   └── test/
+│       └── java/lk/ijse/food_ordering_backend/
+│           └── FoodOrderingBackendApplicationTests.java
+└── target/
+```
+
 ## Features
 
 - **Authentication** — Secure register and login endpoints using JWT tokens. Tokens carry user identity and role claims used across all protected routes.
@@ -45,7 +135,15 @@ git clone https://github.com/Ama-Dombawela/food-ordering-backend.git
 cd food-ordering-backend
 ```
 
-Configure your database and JWT secret in `src/main/resources/application.properties`:
+### Configuration
+
+Copy the example config and fill in your values:
+
+```bash
+cp src/main/resources/application.properties.example src/main/resources/application.properties
+```
+
+Then update these in `application.properties`:
 
 ```properties
 spring.datasource.url=jdbc:mysql://localhost:3306/foodorder_db
