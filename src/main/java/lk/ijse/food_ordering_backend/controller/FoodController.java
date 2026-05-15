@@ -9,7 +9,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 // Handles food item API requests.
 @RestController
@@ -21,46 +23,71 @@ public class FoodController {
 
     // Save a food item.
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> saveFoodItem(@RequestBody FoodItemDTO foodItemDTO) {
+    public ResponseEntity<Map<String, Object>> saveFoodItem(@RequestBody FoodItemDTO foodItemDTO) {
         foodItemService.saveFoodItem(foodItemDTO);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        Map<String, Object> body = new HashMap<>();
+        body.put("message", "Food item created successfully.");
+        body.put("data", null);
+        return new ResponseEntity<>(body, HttpStatus.CREATED);
     }
 
     // Update a food item.
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> updateFoodItem(@PathVariable Long id, @RequestBody FoodItemDTO foodItemDTO) {
+    public ResponseEntity<Map<String, Object>> updateFoodItem(@PathVariable Long id, @RequestBody FoodItemDTO foodItemDTO) {
         foodItemService.updateFoodItem(id, foodItemDTO);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        Map<String, Object> body = new HashMap<>();
+        body.put("message", "Food item updated successfully.");
+        body.put("data", null);
+        return new ResponseEntity<>(body, HttpStatus.OK);
     }
 
     // Delete a food item.
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteFoodItem(@PathVariable Long id) {
+    public ResponseEntity<Map<String, Object>> deleteFoodItem(@PathVariable Long id) {
         foodItemService.deleteFoodItem(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        Map<String, Object> body = new HashMap<>();
+        body.put("message", "Food item deleted successfully.");
+        body.put("data", null);
+        return new ResponseEntity<>(body, HttpStatus.OK);
     }
 
     // Retrieve a food item by id.
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<FoodItemDTO> getFoodItem(@PathVariable Long id) {
-        return new ResponseEntity<>(foodItemService.getFoodItem(id), HttpStatus.OK);
+    public ResponseEntity<Map<String, Object>> getFoodItem(@PathVariable Long id) {
+        FoodItemDTO dto = foodItemService.getFoodItem(id);
+        Map<String, Object> body = new HashMap<>();
+        body.put("message", "Food item retrieved successfully.");
+        body.put("data", dto);
+        return new ResponseEntity<>(body, HttpStatus.OK);
     }
 
     // Retrieve all food items.
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<FoodItemDTO>> getAllFoodItems() {
-        return new ResponseEntity<>(foodItemService.getAllFoodItems(), HttpStatus.OK);
+    public ResponseEntity<Map<String, Object>> getAllFoodItems() {
+        List<FoodItemDTO> list = foodItemService.getAllFoodItems();
+        Map<String, Object> body = new HashMap<>();
+        body.put("message", "Food items retrieved successfully.");
+        body.put("data", list);
+        return new ResponseEntity<>(body, HttpStatus.OK);
     }
 
     // Retrieve food items by category.
     @GetMapping(value = "/category/{categoryId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<FoodItemDTO>> getFoodItemsByCategory(@PathVariable Long categoryId) {
-        return new ResponseEntity<>(foodItemService.getFoodItemsByCategory(categoryId), HttpStatus.OK);
+    public ResponseEntity<Map<String, Object>> getFoodItemsByCategory(@PathVariable Long categoryId) {
+        List<FoodItemDTO> list = foodItemService.getFoodItemsByCategory(categoryId);
+        Map<String, Object> body = new HashMap<>();
+        body.put("message", "Food items for the category retrieved successfully.");
+        body.put("data", list);
+        return new ResponseEntity<>(body, HttpStatus.OK);
     }
 
     // Retrieve food items by status.
     @GetMapping(value = "/status/{status}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<FoodItemDTO>> getFoodItemsByStatus(@PathVariable FoodItemStatus status) {
-        return new ResponseEntity<>(foodItemService.getFoodItemsByStatus(status), HttpStatus.OK);
+    public ResponseEntity<Map<String, Object>> getFoodItemsByStatus(@PathVariable FoodItemStatus status) {
+        List<FoodItemDTO> list = foodItemService.getFoodItemsByStatus(status);
+        Map<String, Object> body = new HashMap<>();
+        body.put("message", "Food items by status retrieved successfully.");
+        body.put("data", list);
+        return new ResponseEntity<>(body, HttpStatus.OK);
     }
 }
