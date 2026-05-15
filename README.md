@@ -105,4 +105,4 @@ The API will be available at `http://localhost:8080`
 
 ## Frontend
 
-This backend connects to the [Food Ordering Frontend](https://github.com/Ama-Dombawela/food-ordering-frontend) — a Vite + React + TypeScript application.
+This backend connects to the [Food Ordering Frontend](https://github.com/Ama-Dombawela/food-ordering-frontend) — a Vite + React + TypeScript frontend
