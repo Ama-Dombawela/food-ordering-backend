@@ -50,7 +50,7 @@ public class SecurityConfig {
 
                         // Allow browser preflight OPTIONS requests without authentication
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        
+
                         // Public routes - no token needed
                         .requestMatchers("/api/auth/**").permitAll()
 
@@ -66,7 +66,8 @@ public class SecurityConfig {
 
                         // ADMIN and CUSTOMER can view and update their profiles
                         .requestMatchers(HttpMethod.GET, "/api/users/**").hasAnyRole("ADMIN", "CUSTOMER")
-                        .requestMatchers(HttpMethod.PUT, "/api/users/**").hasAnyRole("ADMIN", "CUSTOMER") 
+                        .requestMatchers(HttpMethod.PUT, "/api/users/**").hasAnyRole("ADMIN", "CUSTOMER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasAnyRole("ADMIN", "CUSTOMER")
 
                         // All other user operations (e.g. DELETE, POST) are ADMIN only
                         .requestMatchers("/api/users/**").hasRole("ADMIN")
@@ -100,7 +101,7 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         // Only allow requests from the Vite frontend origin
         config.setAllowedOrigins(List.of("http://localhost:5173"));
-         // Allow standard HTTP methods used by the REST API
+        // Allow standard HTTP methods used by the REST API
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         // Allow all headers (e.g. Authorization, Content-Type)
         config.setAllowedHeaders(List.of("*"));

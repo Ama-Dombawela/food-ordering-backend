@@ -8,4 +8,8 @@ import lk.ijse.food_ordering_backend.entity.OrderItem;
 @Repository
 public interface OrderItemDao extends JpaRepository<OrderItem, Long> {
 
+    void deleteByOrder_Id(Long orderId);
+
+    void deleteByFoodItem_Id(Long foodItemId);
+
 }

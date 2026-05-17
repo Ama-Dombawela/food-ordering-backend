@@ -15,4 +15,5 @@ public class AuthDTO implements Serializable {
     private String password;
     private String token;
     private String role;
+    private String name;
 }

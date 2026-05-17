@@ -1,8 +1,12 @@
 package lk.ijse.food_ordering_backend.service.impl;
 
 import lk.ijse.food_ordering_backend.dao.CategoryDao;
+import lk.ijse.food_ordering_backend.dao.CartItemDao;
+import lk.ijse.food_ordering_backend.dao.FoodItemDao;
+import lk.ijse.food_ordering_backend.dao.OrderItemDao;
 import lk.ijse.food_ordering_backend.dto.CategoryDTO;
 import lk.ijse.food_ordering_backend.entity.Category;
+import lk.ijse.food_ordering_backend.entity.FoodItem;
 import lk.ijse.food_ordering_backend.exception.DataNotFoundException;
 import lk.ijse.food_ordering_backend.exception.DuplicateEntryException;
 import lk.ijse.food_ordering_backend.service.CategoryService;
@@ -19,6 +23,9 @@ import java.util.List;
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryDao categoryDao;
+    private final CartItemDao cartItemDao;
+    private final OrderItemDao orderItemDao;
+    private final FoodItemDao foodItemDao;
 
     // Save a new category.
     @Override
@@ -53,6 +60,13 @@ public class CategoryServiceImpl implements CategoryService {
     public void deleteCategory(Long id) {
         Category category = categoryDao.findById(id)
                 .orElseThrow(() -> new DataNotFoundException("Category not found with id: " + id));
+
+        List<FoodItem> foodItems = foodItemDao.findByCategory_Id(id);
+        for (FoodItem foodItem : foodItems) {
+            cartItemDao.deleteByFoodItem_Id(foodItem.getId());
+            orderItemDao.deleteByFoodItem_Id(foodItem.getId());
+        }
+        foodItemDao.deleteAll(foodItems);
 
         categoryDao.delete(category);
     }

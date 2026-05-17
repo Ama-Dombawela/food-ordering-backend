@@ -10,4 +10,6 @@ import lk.ijse.food_ordering_backend.entity.Payment;
 public interface PaymentDao extends JpaRepository<Payment, Long> {
 
     Optional<Payment> findByOrder_Id(Long orderId);
+
+    void deleteByOrder_Id(Long orderId);
 }

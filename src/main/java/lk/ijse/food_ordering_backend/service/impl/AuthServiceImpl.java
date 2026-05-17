@@ -37,11 +37,7 @@ public class AuthServiceImpl implements AuthService {
 
         // Build and save new user
         User user = new User();
-        String name = authDTO.getEmail();
-        if (name != null && name.contains("@")) {
-            name = name.substring(0, name.indexOf('@'));
-        }
-        user.setName(name);
+        user.setName(authDTO.getName());
         user.setEmail(authDTO.getEmail());
         user.setPassword(passwordEncoder.encode(authDTO.getPassword()));
         user.setRole(Role.CUSTOMER); // default role on register
@@ -54,6 +50,7 @@ public class AuthServiceImpl implements AuthService {
         // Build and return response
         AuthDTO response = new AuthDTO();
         response.setEmail(user.getEmail());
+        response.setName(user.getName());
         response.setToken(token);
         response.setRole(user.getRole().name());
         response.setUserId(user.getId());
@@ -79,6 +76,7 @@ public class AuthServiceImpl implements AuthService {
         // Build and return response
         AuthDTO response = new AuthDTO();
         response.setEmail(user.getEmail());
+        response.setName(user.getName());
         response.setToken(token);
         response.setRole(user.getRole().name());
         response.setUserId(user.getId());
