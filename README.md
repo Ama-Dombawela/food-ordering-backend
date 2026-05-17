@@ -4,6 +4,20 @@ A RESTful API backend built with Spring Boot for a full-featured food ordering p
 
 ---
 
+
+## Features
+
+- **Authentication** — Secure register and login endpoints using JWT tokens. Tokens carry user identity and role claims used across all protected routes.
+- **Role-based Access Control** — Two roles: `ADMIN` for full platform management and `CUSTOMER` for browsing, ordering, and account access. Route-level enforcement via Spring Security.
+- **User Management** — Full CRUD on user accounts. Admins can delete users; customers can view and update their own profile.
+- **Category Management** — Admins can create, update, and delete food categories. Both roles can browse categories.
+- **Food Item Management** — Admins manage the food catalog including name, description, price, category, and availability status (`AVAILABLE` / `OUT_OF_STOCK`). Customers can browse and filter by category or status.
+- **Cart Management** — Per-user cart with the ability to add items, remove individual items, or clear the entire cart.
+- **Order Management** — Customers can place orders from their cart. Both roles can view and update order status (`PLACED`, `PREPARING`, `DELIVERED`, `CANCELLED`).
+- **Payment Management** — Payment records are created per order and support status tracking (`PENDING`, `COMPLETED`, `FAILED`).
+
+---
+
 ## Tech Stack
 
 | Technology | Details |
@@ -94,11 +108,11 @@ food-ordering-backend/
 │   │   │   │       └── UserServiceImpl.java
 │   │   │   └── util/
 │   │   │       ├── AppConstants.java
-│   │   │       ├── CustomStatus.java
-│   │   │       └── .gitkeep
+│   │   │       └── CustomStatus.java
 │   │   └── resources/
 │   │       ├── application.properties
 │   │       ├── application.properties.example
+│   │       ├── data.sql
 │   │       ├── static/
 │   │       └── templates/
 │   └── test/
@@ -106,17 +120,6 @@ food-ordering-backend/
 │           └── FoodOrderingBackendApplicationTests.java
 └── target/
 ```
-
-## Features
-
-- **Authentication** — Secure register and login endpoints using JWT tokens. Tokens carry user identity and role claims used across all protected routes.
-- **Role-based Access Control** — Two roles: `ADMIN` for full platform management and `CUSTOMER` for browsing, ordering, and account access. Route-level enforcement via Spring Security.
-- **User Management** — Full CRUD on user accounts. Admins can delete users; customers can view and update their own profile.
-- **Category Management** — Admins can create, update, and delete food categories. Both roles can browse categories.
-- **Food Item Management** — Admins manage the food catalog including name, description, price, category, and availability status (`AVAILABLE` / `OUT_OF_STOCK`). Customers can browse and filter by category or status.
-- **Cart Management** — Per-user cart with the ability to add items, remove individual items, or clear the entire cart.
-- **Order Management** — Customers can place orders from their cart. Both roles can view and update order status (`PLACED`, `PREPARING`, `DELIVERED`, `CANCELLED`).
-- **Payment Management** — Payment records are created per order and support status tracking (`PENDING`, `COMPLETED`, `FAILED`).
 
 ---
 
@@ -152,16 +155,32 @@ spring.datasource.password=your_password
 app.jwt.secret=your_secret_key
 ```
 
-Then build and run:
+### Database Setup
+
+1. Create an empty database in MySQL:
+
+```sql
+CREATE DATABASE foodorder_db;
+```
+
+2. Start the backend — JPA will auto-create all tables:
 
 ```bash
-mvn clean package
 mvn spring-boot:run
 ```
 
-The API will be available at `http://localhost:8080`
+3. Sample data is loaded automatically from `data.sql` on first run.
+
+> [!IMPORTANT]
+> 4. After the first successful run, change in `application.properties`:
+> ```properties
+> spring.sql.init.mode=never
+> ```
+> `spring.jpa.hibernate.ddl-auto=update` ensures your data is never
+> wiped on restart. Tables and data are preserved across all restarts.
 
 ---
+
 
 ## API Endpoints
 
@@ -197,7 +216,7 @@ The API will be available at `http://localhost:8080`
 | GET | /api/users | ADMIN, CUSTOMER |
 | GET | /api/users/{id} | ADMIN, CUSTOMER |
 | PUT | /api/users/{id} | ADMIN, CUSTOMER |
-| DELETE | /api/users/{id} | ADMIN |
+| DELETE | /api/users/{id} | ADMIN, CUSTOMER |
 
 ---
 
